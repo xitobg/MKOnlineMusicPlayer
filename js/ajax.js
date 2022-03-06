@@ -317,6 +317,98 @@ function ajaxLyric(music, callback) {
 
 // ajax加载用户的播放列表
 // 参数 用户的网易云 id
+
+function ajaxLyric1(music, callback) {
+    lyricTip('歌词加载中...');
+    tempType = '';
+	lrcext = 0; //Format lrc in .js or .json
+	tempType = 'json';
+	lrcurl = music.lrc;
+	if (lrcurl.indexOf('.js') >= 0){
+		lrcext = 1;
+		tempType = 'script';
+	}
+	if (lrcurl.indexOf('.json') >= 0){
+		lrcext = 2;
+		tempType = 'json';
+	}
+	if (lrcurl.indexOf('.lrc') >= 0 || lrcurl.indexOf('.ksc') >= 0){
+		lrcext = 3;
+	}
+	if (lrcurl.indexOf('[00') >= 0 || lrcurl.indexOf('karaoke') >= 0){
+		lrcext = 4;
+	}
+    //if(!music.lyric_id) callback('');  // 没有歌词ID，直接返回
+    console.debug('lrcurl : '+lrcurl);
+	switch (lrcext) {
+		case 1:
+			$['ajax']({
+				url: lrcurl,
+				type: 'GET',
+				dataType: tempType,
+				success: function() {
+					if (lrcstr.indexOf('[00') >= 0) {
+						callback(lrcstr); 
+					} else {
+						callback('');
+					}
+				},
+				error: function(){
+					callback('');
+				}
+			})
+			break;
+		case 2:
+			$['ajax']({
+				url: lrcurl,
+				type: 'GET',
+				cache: false,
+				//dataType: 'jsonp',
+				dataType: tempType,
+				jsonp: 'jsoncallback',
+				success: function(a) {
+					if (a['type'] == 'lrc') {
+						if (a['txt'] == 'null' || a['txt'] == '') {
+							callback('');
+						} else {
+							callback(a['txt']); 
+						}
+					} else {
+						callback('');
+					}
+				},
+				error: function() {
+					callback('');
+				}
+			})
+			break;
+		case 3:
+			$['ajax']({
+				url: lrcurl,
+				success: function(templrc) {
+					if (templrc.indexOf('[00') >= 0) {
+						callback(templrc); 
+					} else {
+						callback('');
+					}	
+				},
+				error: function() {
+					callback('');
+				}
+			})
+			break;
+		case 4:
+			if (lrcurl.indexOf('[00')>= 0) {
+				callback(lrcurl); 
+			} else {
+				callback('');
+			}
+			break;
+		default:
+			callback(music.lrc); 
+	}
+	
+}
 function ajaxUserList(uid)
 {
     var tmpLoading = layer.msg('加载中...', {icon: 16,shade: 0.01});
