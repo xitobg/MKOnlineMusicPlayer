@@ -1,4 +1,8 @@
 MKOnlineMusicPlayer
+Edit: tuannvbg@gmail.com
+Date: 2022-04-07
+Note: Player can play song with lyric .lrc, content .lrc, .js (lrc), .json (lrc) dependent API.
+Demo: http://nhacso24h.epizy.com/player/MKOnlineMusicPlayer/
 ========
 MKOnlineMusicPlayer 是一款全屏的音乐播放器 UI 框架（为避免侵权，已移除所有后端功能）。
 
